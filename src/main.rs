@@ -1,9 +1,19 @@
 use std::collections::{HashMap, HashSet};
-use std::hash::Hash;
-use std::iter::zip;
 
 fn main() {
     println!("Hello, world!");
+}
+
+fn count_chars(s: String) -> HashMap<char, i32> {
+    let mut char_counts: HashMap<char, i32> = HashMap::new();
+    for char in s.chars() {
+        if let Some(count) = char_counts.get_mut(&char) {
+            *count += 1;
+        } else {
+            char_counts.insert(char, 1);
+        }
+    }
+    char_counts
 }
 
 /// https://leetcode.com/problems/contains-duplicate/description/
@@ -40,65 +50,18 @@ fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
     unreachable!();
 }
 
-fn count_chars(s: String) -> HashMap<char, i32> {
-    let mut char_counts: HashMap<char, i32> = HashMap::new();
-    for char in s.chars() {
-        if let Some(count) = char_counts.get_mut(&char) {
-            *count += 1;
-        } else {
-            char_counts.insert(char, 1);
-        }
-    }
-    char_counts
-}
-
-fn maps_equal<K, V>(map_1: &HashMap<K, V>, map_2: &HashMap<K, V>) -> bool
-where
-    K: Eq + Hash,
-    V: Eq
-{
-    if map_1.len() != map_2.len() {
-        return false;
-    }
-
-    for (key, value_1) in map_1 {
-        if let Some(value_2) = map_2.get(key){
-            if value_1 != value_2 {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
-    true
-}
 
 /// https://leetcode.com/problems/group-anagrams/
 fn group_anagrams(strs: Vec<String>) -> Vec<Vec<String>> {
-    let mut groups: Vec<(Vec<String>, HashMap<char, i32>)> = Vec::new();
-    let counts: Vec<HashMap<char, i32>> = strs.iter()
-        .map(|str| count_chars(str.clone()))
-        .collect();
-
-    for (str, char_counts) in zip(strs, counts) {
-        let mut is_new = true;
-        for (strings, group_counts) in &mut groups {
-            if maps_equal(&group_counts, &char_counts) {
-                strings.push(str.clone());
-                is_new = false;
-                break;
-            }
-        }
-
-        if is_new {
-            groups.push((vec![str], char_counts.clone()));
-        }
+    let mut groups: HashMap<String, Vec<String>> = HashMap::new();
+    for str in strs {
+        let mut chars: Vec<char> = str.clone().chars().collect();
+        chars.sort();
+        let sorted: String = chars.into_iter().collect();
+        groups.entry(sorted).or_default().push(str);
     }
 
-    groups.iter()
-        .map(|(strings, _)| strings.clone())
-        .collect()
+    groups.values().cloned().collect()
 }
 
 #[cfg(test)]
@@ -159,7 +122,7 @@ mod tests {
     }
 
     fn sorted(mut groups: Vec<Vec<String>>) -> Vec<Vec<String>> {
-        for mut group in &mut groups {
+        for group in &mut groups {
             group.sort();
         }
         groups.sort_by_key(|strs| strs.len());
@@ -168,8 +131,21 @@ mod tests {
 
     #[test]
     fn group_anagrams_multiple_groups() {
-        let strs = vec!["eat".to_owned(),"tea".to_owned(),"tan".to_owned(),"ate".to_owned(),"nat".to_owned(),"bat".to_owned()];
-        let expected = vec![vec!["bat"],vec!["nat","tan"],vec!["ate","eat","tea"]];
+        let strs = vec![
+            "eat".to_string(),
+            "tea".to_string(),
+            "tan".to_string(),
+            "ate".to_string(),
+            "nat".to_string(),
+            "bat".to_string(),
+        ];
+
+        let expected = vec![
+            vec!["bat"],
+            vec!["nat", "tan"],
+            vec!["ate", "eat", "tea"],
+        ];
+
         let result = sorted(group_anagrams(strs));
         assert_eq!(result, expected);
     }
