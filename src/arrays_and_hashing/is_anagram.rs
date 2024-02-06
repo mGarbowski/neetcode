@@ -2,7 +2,7 @@
 
 use std::collections::HashMap;
 
-fn is_anagram(s: String, t: String) -> bool {
+pub fn is_anagram(s: String, t: String) -> bool {
     let s_chars = count_chars(s);
     let t_chars = count_chars(t);
     s_chars == t_chars

@@ -1,13 +1,13 @@
 use std::collections::HashMap;
 use std::hash::Hash;
 
-mod valid_sudoku;
-mod two_sum;
-mod is_anagram;
-mod product_except_self;
-mod group_anagrams;
-mod top_k_frequent;
-mod contains_duplicate;
+pub mod valid_sudoku;
+pub mod two_sum;
+pub mod is_anagram;
+pub mod product_except_self;
+pub mod group_anagrams;
+pub mod top_k_frequent;
+pub mod contains_duplicate;
 
 fn count_elements<T>(elements: Vec<T>) -> HashMap<T, usize>
     where T: Eq + Hash

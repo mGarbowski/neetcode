@@ -1,7 +1,7 @@
 //! https://leetcode.com/problems/two-sum/
 use std::collections::HashMap;
 
-fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
+pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
     let mut diffs = HashMap::new();
     for (idx, num) in nums.iter().enumerate() {
         let diff = target - num;

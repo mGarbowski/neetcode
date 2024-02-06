@@ -1,6 +1,6 @@
 //! https://leetcode.com/problems/product-of-array-except-self/
 
-fn product_except_self(nums: Vec<i32>) -> Vec<i32> {
+pub fn product_except_self(nums: Vec<i32>) -> Vec<i32> {
     let mut result = vec![1; nums.len()];
 
     let mut prefix_prod = 1;

@@ -2,7 +2,7 @@
 
 use crate::arrays_and_hashing::count_elements;
 
-fn top_k_frequent(nums: Vec<i32>, k: i32) -> Vec<i32> {
+pub fn top_k_frequent(nums: Vec<i32>, k: i32) -> Vec<i32> {
     let n_counts = nums.len() + 1;
     let counts = count_elements(nums);
     let mut buckets: Vec<Vec<i32>> = vec![vec![]; n_counts];

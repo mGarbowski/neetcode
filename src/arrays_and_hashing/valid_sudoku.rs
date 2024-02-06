@@ -8,7 +8,7 @@ const BOARD_SQUARES: usize = 3;
 const DIGITS: RangeInclusive<char> = '1'..='9';
 
 
-fn is_valid_sudoku(board: Vec<Vec<char>>) -> bool {
+pub fn is_valid_sudoku(board: Vec<Vec<char>>) -> bool {
     // Check rows
     for row in 0..BOARD_SIZE {
         let mut present = HashSet::new();

@@ -1,7 +1,7 @@
 //! https://leetcode.com/problems/group-anagrams/
 use std::collections::HashMap;
 
-fn group_anagrams(strs: Vec<String>) -> Vec<Vec<String>> {
+pub fn group_anagrams(strs: Vec<String>) -> Vec<Vec<String>> {
     let mut groups: HashMap<String, Vec<String>> = HashMap::new();
     for str in strs {
         let mut chars: Vec<char> = str.clone().chars().collect();
