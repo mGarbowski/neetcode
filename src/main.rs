@@ -1,4 +1,5 @@
 use std::collections::{HashMap, HashSet};
+use std::hash::Hash;
 
 fn main() {
     println!("Hello, world!");
@@ -14,6 +15,16 @@ fn count_chars(s: String) -> HashMap<char, i32> {
         }
     }
     char_counts
+}
+
+fn count_elements<T>(elements: Vec<T>) -> HashMap<T, i32>
+    where T: Eq + Hash
+{
+    let mut counts = HashMap::new();
+    for element in elements {
+        *counts.entry(element).or_default() += 1
+    }
+    counts
 }
 
 /// https://leetcode.com/problems/contains-duplicate/description/
@@ -62,6 +73,18 @@ fn group_anagrams(strs: Vec<String>) -> Vec<Vec<String>> {
     }
 
     groups.values().cloned().collect()
+}
+
+/// https://leetcode.com/problems/top-k-frequent-elements/
+fn top_k_frequent(nums: Vec<i32>, k: i32) -> Vec<i32> {
+    let counts = count_elements(nums);
+    let mut entries: Vec<(i32, i32)> = counts.into_iter().collect();
+    entries.sort_by_key(|en| -en.1);
+    entries.iter()
+        .take(k as usize)
+        .cloned()
+        .map(|(num, _)| num)
+        .collect()
 }
 
 #[cfg(test)]
@@ -148,5 +171,15 @@ mod tests {
 
         let result = sorted(group_anagrams(strs));
         assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn top_k_frequent_elements() {
+        assert_eq!(vec![1, 2], top_k_frequent(vec![1, 1, 1, 2, 2, 3], 2))
+    }
+
+    #[test]
+    fn count_elements_multiple() {
+        assert_eq!(HashMap::from([(1, 3), (2, 2), (3, 1)]), count_elements(vec![1, 1, 1, 2, 2, 3]))
     }
 }
