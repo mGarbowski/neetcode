@@ -1,24 +1,13 @@
 //! https://leetcode.com/problems/valid-parentheses/
 
-use std::collections::LinkedList;
-
-fn is_valid(s: String) -> bool {
-    let mut stack = LinkedList::new();
+pub fn is_valid(s: String) -> bool {
+    let mut stack = vec![];
 
     for char in s.chars() {
-        if char == '(' || char == '[' || char == '{' {
-            stack.push_back(char)
-        } else {
-            if stack.is_empty() {
-                return false
-            }
-
-            let tail = *stack.back().unwrap();
-            if (tail == '(' && char == ')') || (tail == '[' && char == ']') || (tail == '{' && char == '}') {
-                stack.pop_back();
-            }  else {
-                return false
-            }
+        match (stack.last(), char) {
+            (_, '(') | (_, '{') | (_, '[') => stack.push(char),
+            (Some('('), ')') | (Some('{'), '}') | (Some('['), ']') => { stack.pop(); }
+            _ => return false,
         }
     }
 
