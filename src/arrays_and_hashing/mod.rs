@@ -9,6 +9,7 @@ pub mod group_anagrams;
 pub mod top_k_frequent;
 pub mod contains_duplicate;
 pub mod encode_decode_strings;
+pub mod longest_consecutive_sequence;
 
 fn count_elements<T>(elements: Vec<T>) -> HashMap<T, usize>
     where T: Eq + Hash
