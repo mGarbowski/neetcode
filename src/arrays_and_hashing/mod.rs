@@ -8,6 +8,7 @@ pub mod product_except_self;
 pub mod group_anagrams;
 pub mod top_k_frequent;
 pub mod contains_duplicate;
+pub mod encode_decode_strings;
 
 fn count_elements<T>(elements: Vec<T>) -> HashMap<T, usize>
     where T: Eq + Hash
