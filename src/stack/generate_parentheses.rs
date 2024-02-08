@@ -17,31 +17,35 @@ pub fn generate_parenthesis(n: i32) -> Vec<String> {
 fn next_combinations(combination: &str) -> HashSet<String> {
     let mut combinations = HashSet::new();
     for start_idx in 0..combination.len() {
-        let mut end_idxs = vec![start_idx];
-        let mut stack = vec![];
-        for (idx, char) in combination.chars().enumerate().skip(start_idx) {
-            match char {
-                '(' => {stack.push('(');},
-                ')' => {
-                    match stack.pop() {
-                        Some(_) => {
-                            if stack.is_empty() {
-                                end_idxs.push(idx+1);
-                            }
-                        },
-                        None => break,
-                    }
-                }
-                _ => unreachable!()
-            }
-        }
-
-        for end_idx in end_idxs {
+        for end_idx in valid_other_ends(combination, start_idx) {
             combinations.insert(add_parentheses(&combination, start_idx, end_idx));
         }
     }
 
     combinations
+}
+
+fn valid_other_ends(combination: &str, start_idx: usize) -> Vec<usize> {
+    let mut end_idxs = vec![start_idx];
+    let mut stack = vec![];
+
+    for (idx, char) in combination.chars().enumerate().skip(start_idx) {
+        match char {
+            '(' => {stack.push('(');},
+            ')' => {
+                if stack.pop().is_none() {
+                    break;
+                }
+
+                if stack.is_empty() {
+                    end_idxs.push(idx+1);
+                }
+            }
+            _ => unreachable!()
+        }
+    }
+
+    end_idxs
 }
 
 fn add_parentheses(combination: &str, left_idx: usize, right_idx: usize) -> String {
@@ -53,7 +57,7 @@ fn add_parentheses(combination: &str, left_idx: usize, right_idx: usize) -> Stri
 
 #[cfg(test)]
 mod test {
-    use crate::sorted;
+    use crate::*;
     use crate::stack::generate_parentheses::*;
 
 
