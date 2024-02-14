@@ -4,19 +4,22 @@ use std::cmp::max;
 
 pub fn largest_rectangle_area(heights: Vec<i32>) -> i32 {
     let mut max_area = 0;
+    let mut stack: Vec<(usize, i32)> = vec![];
+
     for (idx, height) in heights.iter().enumerate() {
-        let mut left_border = idx;
-        while left_border > 0 && heights[left_border - 1] >= *height {
-            left_border -= 1;
+        let mut new_start = idx;
+        while !stack.is_empty() && stack.last().unwrap().1 > *height {
+            let (start, other_height) = stack.pop().unwrap();
+            new_start = start;
+            let width = (idx - start) as i32;
+            max_area = max(max_area, width * other_height)
         }
+        stack.push((new_start, *height));
+    }
 
-        let mut right_border = idx;
-        while right_border + 1 < heights.len() && heights[right_border + 1] >= *height {
-            right_border += 1;
-        }
-
-        let width = (right_border - left_border + 1) as i32;
-        max_area = max(width * height, max_area);
+    for (start, height) in stack {
+        let width = (heights.len() - start) as i32;
+        max_area = max(max_area, width * height)
     }
 
     max_area
