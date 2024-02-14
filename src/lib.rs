@@ -1,5 +1,6 @@
 pub mod arrays_and_hashing;
 pub mod stack;
+pub mod two_pointers;
 
 
 fn sorted<T>(elements: Vec<T>) -> Vec<T>
