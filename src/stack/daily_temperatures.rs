@@ -1,37 +1,28 @@
 //! https://leetcode.com/problems/daily-temperatures/
 
-use std::collections::HashMap;
-
 #[derive(Copy, Clone, Hash, Eq, PartialEq)]
 struct Temperature {
     value: i32,
-    day: i32
+    day: usize
 }
 
 impl Temperature {
     fn new(value: i32, day: usize) -> Self {
-        Self {value, day: day as i32}
+        Self {value, day}
     }
 }
 
 pub fn daily_temperatures(temperatures: Vec<i32>) -> Vec<i32> {
     let mut stack: Vec<Temperature> = vec![];
-    let mut next_greater: HashMap<Temperature, Temperature> = HashMap::new();
+    let mut result: Vec<i32> = vec![0; temperatures.len()];
 
     for (day, value) in temperatures.iter().enumerate() {
         let current = Temperature::new(*value, day);
-        while !stack.is_empty() && stack.last().cloned().unwrap().value < *value {
+        while !stack.is_empty() && stack.last().unwrap().value < *value {
             let last = stack.pop().unwrap();
-            next_greater.insert(last, current);
+            result[last.day] = (day - last.day) as i32;
         }
         stack.push(current);
-    }
-
-    let mut result = vec![0; temperatures.len()];
-    for (day_idx, value) in temperatures.iter().enumerate() {
-        if let Some(next) = next_greater.get(&Temperature::new(*value, day_idx)) {
-            result[day_idx] = next.day - day_idx as i32;
-        }
     }
 
     result
