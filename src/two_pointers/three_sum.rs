@@ -1,30 +1,44 @@
-//! https://leetcode.com/problems/3sum/description/
+//! https://leetcode.com/problems/3sum/
 
-use std::collections::HashSet;
 
 pub fn three_sum(nums: Vec<i32>) -> Vec<Vec<i32>> {
     let n = nums.len();
-    let mut triplets = HashSet::new();
+    let mut triplets = vec![];
     let mut nums = nums;
     nums.sort();
 
-    for i in 0..n-2 {
-        let mut left = i+1;
-        let mut right = n-1;
+    for (i, &a) in nums.iter().enumerate() {
+        if i > 0 && a == nums[i-1] {
+            continue;
+        }
+
+        let mut left = i + 1;
+        let mut right = n - 1;
         while left < right {
-            if nums[i] + nums[left] + nums[right] < 0 {
+            let sum = a + nums[left] + nums[right];
+            if sum < 0 {
                 left += 1;
-            } else if nums[i] + nums[left] + nums[right] > 0 {
+            } else if sum > 0 {
                 right -= 1;
             } else {
-                triplets.insert(vec![nums[i], nums[left], nums[right]]);
-                left += 1;
+                let left_val = nums[left];
+                let right_val = nums[right];
+                triplets.push(vec![a, left_val, right_val]);
+
                 right -= 1;
+                while left < right && nums[right] == right_val {
+                    right -= 1;
+                }
+
+                left += 1;
+                while left < right && nums[left] == left_val {
+                    left += 1;
+                }
             }
         }
     }
 
-    triplets.into_iter().collect()
+    triplets
 }
 
 #[cfg(test)]
