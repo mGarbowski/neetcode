@@ -3,48 +3,34 @@
 use std::collections::HashSet;
 
 pub fn three_sum(nums: Vec<i32>) -> Vec<Vec<i32>> {
+    let n = nums.len();
+    let mut triplets = HashSet::new();
     let mut nums = nums;
     nums.sort();
-    let mut result: HashSet<(i32, i32, i32)> = HashSet::new();
 
-    for left_idx in 0..=nums.len() - 3 {
-        for right_idx in (left_idx + 2..nums.len()).rev() {
-            let left = nums[left_idx];
-            let right = nums[right_idx];
-            if left * right > 0 {
-                break;
-            }
-
-            let target = -(left + right);
-            if target <= 0 {
-                let mut mid_idx = left_idx + 1;
-                while mid_idx < right_idx && nums[mid_idx] <= 0 {
-                    if nums[mid_idx] == target {
-                        result.insert((left, target, right));
-                    }
-                    mid_idx += 1;
-                }
+    for i in 0..n-2 {
+        let mut left = i+1;
+        let mut right = n-1;
+        while left < right {
+            if nums[i] + nums[left] + nums[right] < 0 {
+                left += 1;
+            } else if nums[i] + nums[left] + nums[right] > 0 {
+                right -= 1;
             } else {
-                let mut mid_idx = right_idx - 1;
-                while mid_idx > left_idx && nums[mid_idx] > 0 {
-                    if nums[mid_idx] == target {
-                        result.insert((left, target, right));
-                    }
-                    mid_idx -= 1;
-                }
+                triplets.insert(vec![nums[i], nums[left], nums[right]]);
+                left += 1;
+                right -= 1;
             }
         }
     }
 
-    result.into_iter()
-        .map(|(a, b, c)| vec![a, b, c])
-        .collect()
+    triplets.into_iter().collect()
 }
 
 #[cfg(test)]
 mod test {
-    use crate::two_pointers::three_sum::*;
     use crate::sorted;
+    use crate::two_pointers::three_sum::*;
 
     #[test]
     fn three_sum_1() {
