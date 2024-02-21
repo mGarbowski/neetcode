@@ -1,6 +1,7 @@
 //! https://leetcode.com/problems/merge-two-sorted-lists/
 
 use std::mem;
+
 use crate::data_structures::linked_list::ListNode;
 
 pub fn merge_two_lists(
@@ -22,8 +23,8 @@ pub fn merge_two_lists(
             mem::swap(l2, &mut current.as_mut().unwrap().next);
         }
         current = &mut current.as_mut().unwrap().next;
-
     }
+
     if list1.is_some() {
         *current = list1;
     } else {
