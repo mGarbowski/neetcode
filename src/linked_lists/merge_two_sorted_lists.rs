@@ -1,19 +1,28 @@
 //! https://leetcode.com/problems/merge-two-sorted-lists/
 
+use std::mem;
 use crate::data_structures::linked_list::ListNode;
 
-pub fn merge_two_lists(mut list1: Option<Box<ListNode>>, mut list2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+pub fn merge_two_lists(
+    mut list1: Option<Box<ListNode>>,
+    mut list2: Option<Box<ListNode>>,
+) -> Option<Box<ListNode>> {
     let mut head = None;
     let mut current = &mut head;
+
     while list1.is_some() && list2.is_some() {
-        if list1.as_ref().unwrap().val <= list2.as_ref().unwrap().val {
-            *current = list1.clone();
-            list1 = list1.unwrap().next;
+        let l1 = &mut list1;
+        let l2 = &mut list2;
+
+        if l1.as_ref().unwrap().val <= l2.as_ref().unwrap().val {
+            mem::swap(current, l1);
+            mem::swap(l1, &mut current.as_mut().unwrap().next);
         } else {
-            *current = list2.clone();
-            list2 = list2.unwrap().next;
+            mem::swap(current, l2);
+            mem::swap(l2, &mut current.as_mut().unwrap().next);
         }
         current = &mut current.as_mut().unwrap().next;
+
     }
     if list1.is_some() {
         *current = list1;
